@@ -34,7 +34,7 @@
 
 #define M5GO_WHEEL_ADDR     0x56
 #define MOTOR_CTRL_ADDR     0x00
-#define ENCODER_ADDR		0x04
+#define ENCODER_ADDR        0x04
 
 
 class M5Bala {

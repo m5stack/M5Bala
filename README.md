@@ -18,12 +18,13 @@ This project used Arduino framework develop, you must install the necessary tool
 - Install M5Stack [USB Driver](https://github.com/m5stack/M5Stack#installing-the-usb-driver)
 - Install ESP32 Platform on PlatformIO
 - Open the M5Bala Project folder on PlatformIO
-- Build your project with *ctrl+alt+b* hotkey or using “Build” button on the PlatformIO Toolbar
+- Build your project with *ctrl+alt+b* hotkey or using **Build** button on the PlatformIO Toolbar
 ![image](./docs/img/platformio-ide-vscode-build-project.png)
 
 ### Dependent library
 - M5Stack - [https://github.com/m5stack/M5Stack](https://github.com/m5stack/M5Stack)
 - MPU6050_tockn - [https://github.com/tockn/MPU6050_tockn](https://github.com/tockn/MPU6050_tockn)
+- NeoPixelBus - [https://github.com/Makuna/NeoPixelBus](https://github.com/Makuna/NeoPixelBus)
 
 ### MicroPython
 - [Examples](./mpy)
