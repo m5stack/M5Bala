@@ -29,19 +29,22 @@ void LED_start() {
 
 void draw_waveform() {
 	#define MAX_LEN 120
+	#define X_OFFSET 0
 	#define Y_OFFSET 100
 	#define X_SCALE  1.8
-	static int16_t val_buf[MAX_LEN+3] = {0};
-	static uint32_t cnt = 0;
+	static int16_t val_buf[MAX_LEN] = {0};
+	static int16_t pt = MAX_LEN - 1;
 
-	uint16_t pt = MAX_LEN - (++cnt % MAX_LEN);
-	val_buf[pt] = constrain((int16_t)(m5bala.getAngle() * X_SCALE), -50, 50);
+	val_buf[pt] = constrain((int16_t)(m5bala.getAngle() * X_SCALE), -80, 80);
+	if (--pt < 0) { pt = MAX_LEN - 1;}
 
-	for (int i = 0; i < (MAX_LEN-2); i++) {
+	for (int i = 1; i < (MAX_LEN); i++) {
 		uint16_t now_pt = (pt + i) % (MAX_LEN);
-		M5.Lcd.drawLine(i, val_buf[now_pt+1] + Y_OFFSET, i+1, val_buf[now_pt+2] + Y_OFFSET, BLACK);
-		M5.Lcd.drawLine(i, val_buf[now_pt]   + Y_OFFSET, i+1, val_buf[now_pt+1] + Y_OFFSET, GREEN);
+		M5.Lcd.drawLine(i, val_buf[(now_pt+1)%MAX_LEN] + Y_OFFSET, i+1, val_buf[(now_pt+2)%MAX_LEN] + Y_OFFSET, BLACK);
+		if (i < MAX_LEN -1)
+			M5.Lcd.drawLine(i, val_buf[now_pt] + Y_OFFSET, i+1, val_buf[(now_pt+1)%MAX_LEN] + Y_OFFSET, GREEN);
 	}
+
 }
 
 void setup()
@@ -65,8 +68,8 @@ void setup()
 
 	// Init M5Bala
 	m5bala.begin();
-	// m5bala.imu->calcGyroOffsets(true); /、
-	// m5bala.imu->setGyroOffsets(-3.09, 0.84, -0.30);
+	// m5bala.imu->calcGyroOffsets(true);
+	m5bala.imu->setGyroOffsets(-5.66, 2.41, 2.09);
 }
 
 
