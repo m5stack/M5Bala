@@ -61,9 +61,9 @@ class M5Bala {
 
 		// control
 		void stop();
-		void move(int16_t speed, uint16_t duration);
-		void turn(int16_t speed, uint16_t duration);
-		void rotate(int16_t speed, uint16_t duration);
+		void move(int16_t speed, uint16_t duration = 0);
+		void turn(int16_t speed, uint16_t duration = 0);
+		void rotate(int16_t speed, uint16_t duration = 0);
 
 	private:
 		TwoWire *wire;

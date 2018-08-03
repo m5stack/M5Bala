@@ -34,6 +34,11 @@ void M5Bala::begin() {
 	left_offset = 0;
 	right_offset = 0;
 	forward_offset = 0;
+
+	for (int i = 0; i < 128; i++) {
+		imu->update();
+	}
+	pitch = imu->getAngleX();
 }
 
 void M5Bala::setMotor(int16_t pwm0, int16_t pwm1) {
@@ -124,6 +129,7 @@ void M5Bala::run() {
 		// Attitude sample
 		imu->update();
 		pitch = imu->getAngleX() + angle_offset;
+
 		#ifndef M5STACK_FIRE
 		pitch = -pitch;
 		#endif
@@ -141,7 +147,8 @@ void M5Bala::run() {
 		PIDCompute();
 
 		// Motor out
-		setMotor(pwm_out0 + left_offset, pwm_out1 + right_offset);
+		setMotor(pwm_out0 + forward_offset + left_offset, 
+				 pwm_out1 + forward_offset + right_offset);
 	}
 }
 
@@ -151,10 +158,11 @@ void M5Bala::stop() {
 }
 
 void M5Bala::move(int16_t speed, uint16_t duration) {
-	left_offset = speed;
-	right_offset = speed;
-	delay(duration);
-	stop();
+	forward_offset = -speed;
+	if (duration != 0) {
+		delay(duration);
+		stop();
+	}
 }
 
 void M5Bala::turn(int16_t speed, uint16_t duration) {
@@ -166,13 +174,19 @@ void M5Bala::turn(int16_t speed, uint16_t duration) {
 		left_offset = 0;
 		right_offset = -speed;
 	}
-	delay(duration);
-	stop();
+
+	if (duration != 0) {
+		delay(duration);
+		stop();
+	}
 }
 
 void M5Bala::rotate(int16_t speed, uint16_t duration) {
 	left_offset = speed;
 	right_offset = -speed;
-	delay(duration);
-	stop();
+
+	if (duration != 0) {
+		delay(duration);
+		stop();
+	}
 }
