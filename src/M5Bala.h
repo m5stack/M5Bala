@@ -47,6 +47,7 @@ class M5Bala {
 		void PIDCompute();
 		void setMotor(int16_t pwm0, int16_t pwm1);
 		void readEncder();
+		uint8_t i2c_readByte(uint8_t address, uint8_t subAddress);
 
 		void setAngleOffset(float offset) { angle_offset = offset; };
 		float getAngle() { return pitch; };
@@ -73,6 +74,7 @@ class M5Bala {
 		int8_t angle_offset;
 		uint32_t loop_interval;
 		float K1, K2, K3, K4, K5;
+		uint8_t imu_id;
 };
 
 #endif

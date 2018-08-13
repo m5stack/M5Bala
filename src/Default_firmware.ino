@@ -98,7 +98,7 @@ void setup() {
 
 	// Display info
 	M5.Lcd.setTextFont(2);
-	M5.Lcd.setTextColor(WHITE, BLACK);
+	M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
 	M5.Lcd.println("M5Stack Balance Mode start");
 
 	// Init M5Bala
@@ -107,14 +107,18 @@ void setup() {
 	// Loading the IMU parameters
 	if (M5.BtnC.isPressed()) {
 		preferences.begin("m5bala-cfg", false);
+		preferences.putBool("have_cfg", true);
 		auto_tune_gyro_offset();
 
 	} else {
 		preferences.begin("m5bala-cfg", true);
-		m5bala.imu->setGyroOffsets( preferences.getFloat("gyroXoffset"), 
-                                preferences.getFloat("gyroYoffset"), 
-                                preferences.getFloat("gyroZoffset"));
+		if (preferences.getBool("have_cfg")) {
+			m5bala.imu->setGyroOffsets( preferences.getFloat("gyroXoffset"), 
+										preferences.getFloat("gyroYoffset"), 
+										preferences.getFloat("gyroZoffset"));
+		}
 	}
+	preferences.end();
 }
 
 void loop() {

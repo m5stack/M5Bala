@@ -1,5 +1,8 @@
 #include "M5Bala.h"
 
+#define MPU9250_ID   0x71
+#define MPU6050_ID   0x68
+
 M5Bala::M5Bala() {
 	wire = &Wire;
 }
@@ -16,6 +19,7 @@ void M5Bala::begin() {
 	// IMU
 	imu = new MPU6050(*wire);
 	imu->begin();
+	imu_id = i2c_readByte(MPU6050_ADDR, MPU6050_WHO_AM_I);
   	// imu.calcGyroOffsets(true);
 	// imu.setGyroOffsets(-2.40, -0.41, 1.07); // FIRE
 	// imu->setGyroOffsets(5.0, 0.50, -2.6); // M5GO
@@ -39,6 +43,17 @@ void M5Bala::begin() {
 		imu->update();
 	}
 	pitch = imu->getAngleX();
+}
+
+uint8_t M5Bala::i2c_readByte(uint8_t address, uint8_t subAddress)
+{
+  uint8_t data; // `data` will store the register data   
+  wire->beginTransmission(address);         // Initialize the Tx buffer
+  wire->write(subAddress);                  // Put slave register address in Tx buffer
+  wire->endTransmission(false);             // Send the Tx buffer, but send a restart to keep connection alive
+  wire->requestFrom(address, (uint8_t) 1);  // Read one byte from slave register address 
+  data = Wire.read();                      // Fill Rx buffer with result
+  return data;                             // Return data read from slave register
 }
 
 void M5Bala::setMotor(int16_t pwm0, int16_t pwm1) {
@@ -130,9 +145,11 @@ void M5Bala::run() {
 		imu->update();
 		pitch = imu->getAngleX() + angle_offset;
 
-		#ifndef M5STACK_FIRE
-		pitch = -pitch;
-		#endif
+		if (imu_id == MPU9250_ID)
+			pitch = -pitch;
+		// #ifndef MPU6050_IMU
+		// pitch = -pitch;
+		// #endif
 
 		// Car down
 		if (abs(pitch) > 45) {
