@@ -86,7 +86,6 @@ void setup() {
 	// Power ON Stabilizing...
 	delay(500);
 	M5.begin();
-	M5.setPowerBoostKeepOn(false);
 
 	// Turn on LED BAR
 	LED_start();
