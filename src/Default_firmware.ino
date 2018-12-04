@@ -128,7 +128,7 @@ void loop() {
 	if (millis() > print_interval) {
 		print_interval = millis() + 100;
 		M5.Lcd.setCursor(0, 190);
-		M5.Lcd.printf("Input  Encoer0: %+4d  Encoer0: %+4d    \r\n", 
+		M5.Lcd.printf("Input  Encoder0: %+4d  Encoder1: %+4d    \r\n", 
 								m5bala.getSpeed0(), m5bala.getSpeed1());
 		M5.Lcd.printf("Output PWM0: %+4d     PWM1: %+4d    \r\n", 
 								m5bala.getOut0(), m5bala.getOut1());
