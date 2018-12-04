@@ -36,7 +36,7 @@ _ACCEL_XOUT_L = const(0x3c)
 _ACCEL_YOUT_H = const(0x3d)
 _ACCEL_YOUT_L = const(0x3e)
 _ACCEL_ZOUT_H = const(0x3f)
-_ACCEL_ZOUT_L= const(0x40)
+_ACCEL_ZOUT_L = const(0x40)
 _TEMP_OUT_H = const(0x41)
 _TEMP_OUT_L = const(0x42)
 _GYRO_XOUT_H = const(0x43)
@@ -77,7 +77,7 @@ _I2C_BYPASS_DIS = const(0b00000000)
 SF_G = 1
 SF_M_S2 = 9.80665 # 1 g = 9.80665 m/s2 ie. standard gravity
 SF_DEG_S = 1
-SF_RAD_S = 57.295779513082 # 1 rad/s is 57.295779578552 deg/s
+SF_RAD_S = 57.295779513082 # 1 rad/s is 57.295779513082 deg/s
 
 class MPU6050:
     """Class which provides interface to MPU6500 6-axis motion tracking device."""
@@ -89,7 +89,6 @@ class MPU6050:
         if i2c:
             self.i2c = i2c
         else:
-            from machine import I2C
             self.i2c = I2C(sda=21, scl=22, speed=400000)
         self.address = address
 
@@ -110,7 +109,7 @@ class MPU6050:
         # char &= ~_I2C_BYPASS_MASK # clear I2C bits
         # char |= _I2C_BYPASS_EN
         # self._register_char(_INT_PIN_CFG, char)
-        self.preInterval = time.time()
+        self.preInterval = time.ticks_us()
         self.accCoef = 0.02
         self.gyroCoef = 0.98
         self.angleGyroX = 0
@@ -161,7 +160,7 @@ class MPU6050:
         accX, accY, accZ = self.acceleration
 
         angleAccX = math.atan2(accY, accZ + abs(accX)) * SF_RAD_S
-        angleAccY = math.atan2(accX, accZ + abs(accY)) * (-SF_RAD_S);
+        angleAccY = math.atan2(accX, accZ + abs(accY)) * (-SF_RAD_S)
 
         gyroX, gyroY, gyroZ = self.gyro
         gyroX -= self.gyroXoffset
@@ -175,8 +174,8 @@ class MPU6050:
         self.angleGyroY += gyroY * interval
         self.angleGyroZ += gyroZ * interval
 
-        self.angleX = (self.gyroCoef * (self.angleX + gyroX * interval)) + (self.accCoef * angleAccX);
-        self.angleY = (self.gyroCoef * (self.angleY + gyroY * interval)) + (self.accCoef * angleAccY);
+        self.angleX = (self.gyroCoef * (self.angleX + gyroX * interval)) + (self.accCoef * angleAccX)
+        self.angleY = (self.gyroCoef * (self.angleY + gyroY * interval)) + (self.accCoef * angleAccY)
         self.angleZ = self.angleGyroZ
 
         return tuple([self.angleZ, self.angleX, self.angleY])
