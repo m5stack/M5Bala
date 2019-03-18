@@ -11,7 +11,7 @@ MOTOR_CTRL_ADDR = const(0x00)
 ENCODER_ADDR = const(0x04)
 
 
-#define constrain(amt,low,high) (amt)<(low)?(low):((amt)>(high)?(high):(amt))
+# define constrain(amt,low,high) (amt)<(low)?(low):((amt)>(high)?(high):(amt))
 def constrain(amt, low, high):
     if amt < low:
         return low
@@ -57,15 +57,15 @@ class M5Bala:
         self.stop()
 
     def turn(self, speed, duration=5):
-        if speed > 0: # Turn RIGHT
+        if speed > 0:  # Turn RIGHT
             self.left = abs(speed)
             self.right = 0
-        elif speed < 0: # Turn LEFT
+        elif speed < 0:  # Turn LEFT
             self.left = 0
             self.right = abs(speed)
         time.sleep(duration)
         self.stop()
-    
+
     def rotate(self, speed, duration=2):
         if speed > 0:
             self.left = speed
@@ -86,7 +86,7 @@ class M5Bala:
         return tuple(ustruct.unpack('<hh', buf))
 
     def balance(self):
-        if time.ticks_us() >= self.loop_interval: # 10ms
+        if time.ticks_us() >= self.loop_interval:  # 10ms
             self.loop_interval = time.ticks_us() + 10000
 
             # Angle X sample
@@ -119,14 +119,13 @@ class M5Bala:
             # -- PID
             torque = (angle_velocity * self.K1) + (angle * self.K2) + (wheel_velocity * self.K3) + (wheel * self.K4)
             torque = constrain(torque, -255, 255)
-            
+
             # -- Wheel offset
             speed_diff = (int(self.in_speed0) - int(self.in_speed1))
             speed_diff *= self.K5
 
             # -- PWM OUT
             self.set_motor(torque + self.left - speed_diff, torque + self.right)
-
 
     def run(self, blocking=False):
         if blocking:
