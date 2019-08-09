@@ -55,6 +55,7 @@ class M5Bala {
 		int16_t getSpeed1() { return speed_input1; };
 		int16_t getOut0() { return pwm_out0; };
 		int16_t getOut1() { return pwm_out1; };
+		float getImuAngle() { return imu->getAngleX(); }
 
 		MPU6050 *imu;
 		int16_t left_offset, right_offset;
@@ -71,7 +72,7 @@ class M5Bala {
 		float yaw, pitch, roll;
 		int16_t speed_input0, speed_input1;
 		int16_t pwm_out0, pwm_out1;
-		int8_t angle_offset;
+		float angle_offset;
 		uint32_t loop_interval;
 		float K1, K2, K3, K4, K5;
 		uint8_t imu_id;

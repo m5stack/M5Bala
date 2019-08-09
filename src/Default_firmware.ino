@@ -78,6 +78,7 @@ void auto_tune_gyro_offset() {
 	preferences.putFloat("gyroXoffset", gyroXoffset);
 	preferences.putFloat("gyroYoffset", gyroYoffset);
 	preferences.putFloat("gyroZoffset", gyroZoffset);
+	preferences.putFloat("angleOffset", 0.0);
 	preferences.end();
 }
 
@@ -116,6 +117,8 @@ void setup() {
 			m5bala.imu->setGyroOffsets( preferences.getFloat("gyroXoffset"), 
 										preferences.getFloat("gyroYoffset"), 
 										preferences.getFloat("gyroZoffset"));
+			m5bala.setAngleOffset(preferences.getFloat("angleOffset"));
+			Serial.printf("angleOffset save :%f \r\n", preferences.getFloat("angleOffset"));
 		}
 	}
 	preferences.end();
@@ -142,6 +145,14 @@ void loop() {
 		draw_waveform();
 	}
 
+	if(M5.BtnB.wasPressed()) {
+		float offSetSave = -(m5bala.getImuAngle());
+		m5bala.setAngleOffset(offSetSave);
+		preferences.begin("m5bala-cfg", false);
+		preferences.putFloat("angleOffset", offSetSave);
+		Serial.printf("angleOffset save :%f \r\n", offSetSave);
+		preferences.end();
+	}
 	// M5Bala balance run
 	m5bala.run();
 
