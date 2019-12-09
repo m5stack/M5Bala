@@ -3,6 +3,8 @@
  * Reading encoder and writting the motor via I2C
  ********************************************************/
 
+// Please add <NeoPixelBus.h> on your library manager,github  https://github.com/Makuna/NeoPixelBus
+
 #include <M5Stack.h>
 #include <NeoPixelBus.h>
 #include <Wire.h>
