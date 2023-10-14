@@ -20,6 +20,7 @@ void M5Bala::begin() {
 	imu = new MPU6050(*wire);
 	imu->begin();
 	imu_id = i2c_readByte(MPU6050_ADDR, MPU6050_WHO_AM_I);
+	Serial.printf("imu_id:%x\r\n", imu_id);
   	// imu.calcGyroOffsets(true);
 	// imu.setGyroOffsets(-2.40, -0.41, 1.07); // FIRE
 	// imu->setGyroOffsets(5.0, 0.50, -2.6); // M5GO
@@ -138,15 +139,23 @@ void M5Bala::PIDCompute() {
 }
 
 void M5Bala::run() {
+
 	if (micros() >= loop_interval) {
 		loop_interval = micros() + 10000;
 
 		// Attitude sample
 		imu->update();
 		pitch = imu->getAngleX() + angle_offset;
+		
+		Serial.printf("angle_offset:%.2f pitch:%.2f \r\n", angle_offset, pitch);
 
-		if (imu_id == MPU9250_ID)
+		if (imu_id == 0x19 || imu_id == MPU9250_ID) {
+			//Serial.printf("pitch here\r\n");
 			pitch = -pitch;
+		}
+			
+
+		//Serial.printf("pitch: %f\r\n", pitch);
 		// #ifndef MPU6050_IMU
 		// pitch = -pitch;
 		// #endif
@@ -159,7 +168,7 @@ void M5Bala::run() {
 
 		// Encoder sample
 		readEncder();
-
+		
 		// PID Compute
 		PIDCompute();
 
@@ -167,6 +176,7 @@ void M5Bala::run() {
 		setMotor(pwm_out0 + forward_offset + left_offset, 
 				 pwm_out1 + forward_offset + right_offset);
 	}
+	
 }
 
 void M5Bala::stop() {
